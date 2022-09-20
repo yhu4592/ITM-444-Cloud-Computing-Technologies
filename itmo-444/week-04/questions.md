@@ -38,8 +38,8 @@ The speed of a transaction such as retrieving an email message can be estimated 
 
 9. In Section 1.7 three design ideas are presented for how to process email deletion requests. Estimate how long the request will take for deleting an email message for each of the three.
 
-One design idea is to contact the server and delete the message from the storage system and index. Sending a request and receiving a response may take up to 150ms. An index lookup takes 3 disk seeks for 30ms and reads 1mb of information for 30ms. Reading the data to mark it for deletion would take 4 disk seeks for 40ms and reading 1mb for 30ms. This, this design is estimated to take about 280ms. 
+One design idea is to contact the server and delete the message from the storage system and index. Sending a request and receiving a response from the datacenter may take up to 150ms. An index lookup would be needed to lookup and delete the messages from the index, which takes 3 disk seeks for 30ms and reads 1mb of information for 30ms. Reading the data for deletion from the storage would take 4 disk seeks for 40ms and reading 2mb for 60ms. Thus, this design is estimated to take about 310ms. 
 
-The second design idea is to have the storage system mark the message as deleted in the index. Sending the request and receiving a response would take about 150ms. An index lookup takes 3 disk seeks for 30ms and reads 1mb of information for 30ms. Thus, this design is estimated to take about 210ms. 
+The second design idea is to have the storage system mark the message as deleted in the index. Sending the request and receiving a response from the datacenter would take about 150ms. An index lookup would be needed to search up and mark the message for deletion, which takes 3 disk seeks for 30ms and reads 1mb of information for 30ms. Thus, this design is estimated to take about 210ms. 
 
 The third design idea is to have an asynchronous design where the client sends the request to the server and control returns back to the user despite the request not being completed. Sending a request without waiting for a response would take about 75ms. Thus, this design is estiamted to take about 75ms. 
