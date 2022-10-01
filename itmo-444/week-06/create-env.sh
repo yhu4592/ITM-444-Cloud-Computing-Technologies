@@ -36,17 +36,20 @@ aws elbv2 create-target-group \
 			    
 TG=$(aws elbv2 describe-target-groups --output=text --query='TargetGroups[*].TargetGroupArn')
 
+
+
 # create AWS elbv2 load-balancer
 aws elbv2 create-load-balancer \
 	    --name $7 \
 	        --subnets $SUBNETIDS1 $SUBNETIDS2
 
-LB=$(aws elbv2 describe-load-balancers --output=text --query='LoadBalancers[*].LoadBalancerArn')
 
 # AWS elbv2 wait for load-balancer available
 # https://awscli.amazonaws.com/v2/documentation/api/latest/reference/elbv2/wait/load-balancer-available.html
 aws elbv2 wait load-balancer-available \
-	    --load-balancer-arns $LB
+	    --load-balancer-arns $7
+
+LB=$(aws elbv2 describe-load-balancers --output=text --query='LoadBalancers[*].LoadBalancerArn')
 
 # create AWS elbv2 listener for HTTP on port 80
 #https://awscli.amazonaws.com/v2/documentation/api/latest/reference/elbv2/create-listener.html
@@ -57,4 +60,5 @@ aws elbv2 create-listener \
 		        --default-actions Type=forward,TargetGroupArn=$TG
 
 # Retreive ELBv2 URL via aws elbv2 describe-load-balancers --query and print it to the screen
+URL=$(aws elbv2 describe-load-balancers --output=text --query='LoadBalancers[*].DNSName')
 echo $URL
