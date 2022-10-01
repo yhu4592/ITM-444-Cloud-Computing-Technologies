@@ -47,7 +47,7 @@ aws elbv2 create-load-balancer \
 # AWS elbv2 wait for load-balancer available
 # https://awscli.amazonaws.com/v2/documentation/api/latest/reference/elbv2/wait/load-balancer-available.html
 aws elbv2 wait load-balancer-available \
-	    --load-balancer-arns $7
+	    --names $7
 
 LB=$(aws elbv2 describe-load-balancers --output=text --query='LoadBalancers[*].LoadBalancerArn')
 
