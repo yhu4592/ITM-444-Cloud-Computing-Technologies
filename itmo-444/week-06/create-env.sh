@@ -54,6 +54,7 @@ aws elbv2 wait load-balancer-available \
 
 LB=$(aws elbv2 describe-load-balancers --output=text --query='LoadBalancers[*].LoadBalancerArn' --no-paginate)
 
+IDS=$(aws ec2 describe-instances --filters Name=instance-state-name,Values=running --query "Reservations[*].Instances[*].InstanceId")
 # create AWS elbv2 listener for HTTP on port 80
 #https://awscli.amazonaws.com/v2/documentation/api/latest/reference/elbv2/create-listener.html
 aws elbv2 create-listener \
@@ -62,6 +63,11 @@ aws elbv2 create-listener \
 		    --port 80 \
 		        --default-actions Type=forward,TargetGroupArn=$TG \
 			   --no-paginate
+
+echo "created listener"
+for ID in $IDS; do
+	    aws elbv2 register-targets --target-group-arn $TG  --targets Id=$ID
+done
 
 # Retreive ELBv2 URL via aws elbv2 describe-load-balancers --query and print it to the screen
 URL=$(aws elbv2 describe-load-balancers --output=text --query='LoadBalancers[*].DNSName' --no-paginate)
