@@ -18,10 +18,10 @@
 # Get Subnet 2 ID
 # Get VPCID
 VPCID=$(aws ec2 describe-vpcs --output=text --query='Vpcs[*].VpcId' --no-paginate)
-SUBNETIDS1=$(aws ec2 describe-subnets --output=text --query 'Subnets[0].SubnetId' --no-paginate)
-SUBNETIDS2=$(aws ec2 describe-subnets --output=text --query 'Subnets[1].SubnetId' --no-paginate)
+SUBNETIDS1=$(aws ec2 describe-subnets --output=text --query 'Subnets[0].SubnetId' --no-cli-pager)
+SUBNETIDS2=$(aws ec2 describe-subnets --output=text --query 'Subnets[1].SubnetId' --no-cli-pager)
 # Launch 3 EC2 instnaces 
-aws ec2 run-instances --image-id $1 --instance-type $2 --key-name $3 --security-group-ids $4 --count $5 --user-data file://install-env.sh --no-paginate
+aws ec2 run-instances --image-id $1 --instance-type $2 --key-name $3 --security-group-ids $4 --count $5 --user-data file://install-env.sh --no-cli-pager
 
 # Run EC2 wait until EC2 instances are in the running state
 # https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/wait/index.html
@@ -33,9 +33,9 @@ aws elbv2 create-target-group \
 		    --port 80 \
 		        --target-type instance \
 			    --vpc-id $VPCID \
-			       --no-paginate
+			       --no-cli-pager
 			    
-TG=$(aws elbv2 describe-target-groups --output=text --query='TargetGroups[*].TargetGroupArn' --no-paginate )
+TG=$(aws elbv2 describe-target-groups --output=text --query='TargetGroups[*].TargetGroupArn' --no-cli-pager)
 
 
 
@@ -43,16 +43,16 @@ TG=$(aws elbv2 describe-target-groups --output=text --query='TargetGroups[*].Tar
 aws elbv2 create-load-balancer \
 	    --name $7 \
 	        --subnets $SUBNETIDS1 $SUBNETIDS2 \
-		   --no-paginate
+		   --no-cli-pager
 
 
 # AWS elbv2 wait for load-balancer available
 # https://awscli.amazonaws.com/v2/documentation/api/latest/reference/elbv2/wait/load-balancer-available.html
 aws elbv2 wait load-balancer-available \
 	    --names $7 \
-	       --no-paginate
+	       --no-cli-pager
 
-LB=$(aws elbv2 describe-load-balancers --output=text --query='LoadBalancers[*].LoadBalancerArn' --no-paginate)
+LB=$(aws elbv2 describe-load-balancers --output=text --query='LoadBalancers[*].LoadBalancerArn' --no-cli-pager)
 
 IDS=$(aws ec2 describe-instances --filters Name=instance-state-name,Values=running --query "Reservations[*].Instances[*].InstanceId")
 # create AWS elbv2 listener for HTTP on port 80
@@ -62,13 +62,14 @@ aws elbv2 create-listener \
 	        --protocol HTTP \
 		    --port 80 \
 		        --default-actions Type=forward,TargetGroupArn=$TG \
-			   --no-paginate
+			   --no-cli-pager
 
-echo "created listener"
 for ID in $IDS; do
 	    aws elbv2 register-targets --target-group-arn $TG  --targets Id=$ID
 done
 
+
+
 # Retreive ELBv2 URL via aws elbv2 describe-load-balancers --query and print it to the screen
-URL=$(aws elbv2 describe-load-balancers --output=text --query='LoadBalancers[*].DNSName' --no-paginate)
+URL=$(aws elbv2 describe-load-balancers --output=text --query='LoadBalancers[*].DNSName' --no-cli-pager)
 echo $URL
