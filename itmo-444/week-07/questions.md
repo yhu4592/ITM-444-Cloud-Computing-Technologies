@@ -16,11 +16,15 @@ The four-tier web application pattern consists of four layers: a load balancer, 
 
 5. What is “shared state” and how is it maintained between replicas?
 
+Shared state is the ability for replica backends to access the same information despite the requests being made to a specific backend. Shared state is maintain by storing information in a shared area that all backends can access so it doesn't matter which backend receives the request. 
+
 6. What are the services that a four-tier architecture provides in the first tier?
+
+
 
 7. What does a reverse proxy do? When is it needed?
 
-A reverse proxy
+A reverse proxy allows web servers to obtain content from other web servers. A reverse proxy is used in an application or services that utilizes multiple different web servers in order to make one cohesive experience for the user.  
 
 8. Suppose you wanted to build a simple image-sharing web site. How would you design it if the site was intended to serve people in one region of the world? How would you then expand it to work globally?
 
