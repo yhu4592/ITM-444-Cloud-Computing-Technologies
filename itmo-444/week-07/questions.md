@@ -22,6 +22,10 @@ The single-machine web architecture is where the web and database server is run 
 
 | Layer 3 and 4 Load Balancers | Pros | Cons |
 | ------------- | ------------- | ----- |
+| Layer 3 is the network layer and layer 4 is the TCP layer. L3 and 4 receive a TCP session and redirect it to a replica.  | Simple, fast, and can redirect traffic if a replica is down.  |   |
+
+| Layer 7 Load Balancer | Pros | Cons |
+| ------------- | ------------- | ----- |
 
 5. What is “shared state” and how is it maintained between replicas?
 
