@@ -16,6 +16,13 @@ The single-machine web architecture is where the web and database server is run 
 
 4. Describe how different local load balancer types work and what their pros and cons are. You may choose to make a comparison chart.
 
+| DNS Round Robin | Pros | Cons |
+| ------------- | ------------- | ----- |
+| Web servers receives all IPs of web servers in DNS entry and will randomly pick one. This allows are almsot even distribution under load. | Easy to implement, free, and no hardware is needed. | Difficult to control, not responsive, and DNS cache will not update immediately if a server dies |
+
+| Layer 3 and 4 Load Balancers | Pros | Cons |
+| ------------- | ------------- | ----- |
+
 5. What is “shared state” and how is it maintained between replicas?
 
 Shared state is the ability for replica backends to access the same information despite the requests being made to a specific backend. Shared state is maintain by storing information in a shared area that all backends can access so it doesn't matter which backend receives the request. 
