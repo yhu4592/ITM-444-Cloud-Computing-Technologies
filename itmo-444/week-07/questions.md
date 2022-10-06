@@ -12,6 +12,8 @@ The four-tier web application pattern consists of four layers: a load balancer, 
 
 3. Describe the common web service architectures, in order from smallest to largest (hint 4 of them remember the Cloud Scale or Cloud tier as number 4).
 
+The single-machine web architecture is where the web and database server is run on a single machine. The three-tier web architecture is a three-layer pattern that utilizes a load-balancer which forwards requests to one-of-many backend server machines which connect to a common data service. The four-tier web architecture is a four-layer pattern that further separates the frontend where it utilizes a load-balancer which forwards the request to one-of-many frontend machines which is forwarded to their own server machines which all connect to a data service. The cloud tier utilizes one of the previous web architectures which is replicated in datacenters around the world where a global load balancer directs requests to datacenters. The cloud tier may also utilize POPs to help direct requests to help connect ISPs to datacenters.
+
 4. Describe how different local load balancer types work and what their pros and cons are. You may choose to make a comparison chart.
 
 5. What is “shared state” and how is it maintained between replicas?
@@ -28,6 +30,10 @@ A reverse proxy allows web servers to obtain content from other web servers. A r
 
 8. Suppose you wanted to build a simple image-sharing web site. How would you design it if the site was intended to serve people in one region of the world? How would you then expand it to work globally?
 
+
+
 9. What is a message bus architecture and how might one be used?
+
+Message bus architecture is a many-to-many communication mechanism where servers can communicate and access information with other servers. Servers, called publishers, share information with a channel where other servers, subscribers, receive information from. 
 
 10. Who was Christopher Alexander and what was his contribution to architecture?
