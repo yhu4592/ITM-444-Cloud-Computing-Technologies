@@ -10,6 +10,8 @@ The four-tier web application pattern consists of four layers: a load balancer, 
 
 2. Describe how a single-machine web server, which uses a database to generate content, might evolve to a three-tier web server. How would this be done with minimal downtime?
 
+
+
 3. Describe the common web service architectures, in order from smallest to largest (hint 4 of them remember the Cloud Scale or Cloud tier as number 4).
 
 The single-machine web architecture is where the web and database server is run on a single machine. The three-tier web architecture is a three-layer pattern that utilizes a load-balancer which forwards requests to one-of-many backend server machines which connect to a common data service. The four-tier web architecture is a four-layer pattern that further separates the frontend where it utilizes a load-balancer which forwards the request to one-of-many frontend machines which is forwarded to their own server machines which all connect to a data service. The cloud tier utilizes one of the previous web architectures which is replicated in datacenters around the world where a global load balancer directs requests to datacenters. The cloud tier may also utilize POPs to help direct requests to help connect ISPs to datacenters.
@@ -26,6 +28,7 @@ The single-machine web architecture is where the web and database server is run 
 
 | Layer 7 Load Balancer | Pros | Cons |
 | ------------- | ------------- | ----- |
+| Similar to L3 and 4 load balancers, but bases decisions by peering into application layer for richer features. | Richer features | d |
 
 5. What is “shared state” and how is it maintained between replicas?
 
@@ -48,3 +51,5 @@ A reverse proxy allows web servers to obtain content from other web servers. A r
 Message bus architecture is a many-to-many communication mechanism where servers can communicate and access information with other servers. Servers, called publishers, share information with a channel where other servers, subscribers, receive information from. 
 
 10. Who was Christopher Alexander and what was his contribution to architecture?
+
+Christopher Alexander was an architecture who influenced the idea of patterns as a solution of recurring problems in a context. 
