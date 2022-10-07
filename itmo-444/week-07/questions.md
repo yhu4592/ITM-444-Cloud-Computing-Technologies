@@ -10,7 +10,7 @@ The four-tier web application pattern consists of four layers: a load balancer, 
 
 2. Describe how a single-machine web server, which uses a database to generate content, might evolve to a three-tier web server. How would this be done with minimal downtime?
 
-
+The single-machine web server would need to utilize a data server instead of a local database server. Multiple new machines would also need to be purchased to run the web server. A load balancer would then need to be set up to forward requests to all of the web servers which need to connect to a data server. To minimize downtime, the load balancer and data server could be set up first so the site can at least be serviceable and then gradually register new web servers to the load balancer as new machines are set up. 
 
 3. Describe the common web service architectures, in order from smallest to largest (hint 4 of them remember the Cloud Scale or Cloud tier as number 4).
 
@@ -24,11 +24,11 @@ The single-machine web architecture is where the web and database server is run 
 
 | Layer 3 and 4 Load Balancers | Pros | Cons |
 | ------------- | ------------- | ----- |
-| Layer 3 is the network layer and layer 4 is the TCP layer. L3 and 4 receive a TCP session and redirect it to a replica.  | Simple, fast, and can redirect traffic if a replica is down.  |   |
+| Layer 3 is the network layer and layer 4 is the TCP layer. L3 and 4 receive a TCP session and redirect it to a replica.  | Simple, fast, and can redirect traffic if a replica is down.  | - |
 
 | Layer 7 Load Balancer | Pros | Cons |
 | ------------- | ------------- | ----- |
-| Similar to L3 and 4 load balancers, but bases decisions by peering into application layer for richer features. | Richer features | d |
+| Similar to L3 and 4 load balancers, but bases decisions by peering into application layer for richer features. | Richer features | - |
 
 5. What is “shared state” and how is it maintained between replicas?
 
@@ -44,7 +44,7 @@ A reverse proxy allows web servers to obtain content from other web servers. A r
 
 8. Suppose you wanted to build a simple image-sharing web site. How would you design it if the site was intended to serve people in one region of the world? How would you then expand it to work globally?
 
-
+I would design a three-tier application in order to have more reliability, performance, and scalabilty with the large number of users. However, if a dedicated team can be managed and coordinated, I would design a four-tier application in order to separate protocol and security issues from the application server. Regardless, a three- or four-tier design can be expanded by replicating the designs in datacenters around the world with a global load balancer forwarding requests to the closest datacenter. We may also need to set up POPs to help connect to ISPs that are farther away from the datacenters. 
 
 9. What is a message bus architecture and how might one be used?
 
