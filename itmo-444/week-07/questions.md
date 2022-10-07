@@ -36,7 +36,7 @@ Shared state is the ability for replica backends to access the same information 
 
 6. What are the services that a four-tier architecture provides in the first tier?
 
-
+In a four-tier architecture, the frontend handles all cookie processing, compression, encryption, and sessopn pipelinig, where multiple HTTP requests are handled in the same TCP connection. 
 
 7. What does a reverse proxy do? When is it needed?
 
