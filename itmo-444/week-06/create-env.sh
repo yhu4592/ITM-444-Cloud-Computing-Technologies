@@ -44,10 +44,12 @@ aws elbv2 create-target-group \
 			    
 TG=$(aws elbv2 describe-target-groups --output=text --query='TargetGroups[*].TargetGroupArn' --no-cli-pager)
 for ID in $IDS; do
-	                aws elbv2 register-targets --target-group-arn $TG  --targets Id=$ID
-			        done
-
-aws elbv2 wait target-in-service --target-group-arn $TG --no-cli-pager
+        aws elbv2 register-targets --target-group-arn $TG  --targets Id=$ID
+done
+	
+#for ID in $IDS; do
+#        aws elbv2 wait target-in-service --target-group-arn $TG --targets Id=$ID,Port=80 --no-cli-pager
+#done
 
 # create AWS elbv2 load-balancer
 aws elbv2 create-load-balancer \
