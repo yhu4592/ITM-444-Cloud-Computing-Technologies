@@ -19,7 +19,7 @@
 # Get VPCID
 VPCID=$(aws ec2 describe-vpcs --output=text --query='Vpcs[*].VpcId' --no-paginate)
 SUBNETIDS1=$(aws ec2 describe-subnets --output=text --query 'Subnets[0].SubnetId' --no-cli-pager)
-SUBNETIDS2=$(aws ec2 describe-subnets --output=text --query 'Subnets[1].SubnetId' --no-cli-pager)
+SUBNETIDS2=$(aws ec2 describe-subnets --output=text --query 'Subnets[2].SubnetId' --no-cli-pager)
 
 # Launch 3 EC2 instnaces 
 aws ec2 run-instances --image-id $1 --instance-type $2 --key-name $3 --security-group-ids $4 --count $5 --user-data file://install-env.sh --no-cli-pager
