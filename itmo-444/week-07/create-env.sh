@@ -80,3 +80,14 @@ aws autoscaling create-auto-scaling-group --auto-scaling-group-name ${9} --launc
 #https://awscli.amazonaws.com/v2/documentation/api/latest/reference/elbv2/describe-load-balancers.html
 URL=$(aws elbv2 describe-load-balancers --output=json --load-balancer-arns $ELBARN --query='LoadBalancers[*].DNSName' --no-cli-pager)
 echo $URL
+
+aws rds create-db-instance --db-instance-identifier ${11} --db-instance-class db.t3.micro --engine mariadb --master-username wizard --master-user-password cluster168 --db-name customers --allocated-storage 20
+echo "Creating DB Instance"
+
+aws rds wait db-instance-available --db-instance-identifier ${11}
+echo "DB Instance Availble"
+
+aws rds create-db-instance-read-replica --db-instance-identifier ${12} --source-db-instance-identifier ${11}
+
+aws rds wait db-instance-available --db-instance-identifier ${12}
+echo "Read-replica Availble"

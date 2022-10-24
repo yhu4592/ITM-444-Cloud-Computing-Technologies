@@ -27,4 +27,8 @@ aws elbv2 delete-target-group --target-group-arn $TG
 echo "Delete Launch Configuration"
 aws autoscaling delete-launch-configuration --launch-configuration-name $LCN
 
+aws rds wait delete-db-instance --db-instance-identifier ${12} --skip-final-snapshot
+echo "Read-replica Deleted"
 
+aws rds wait delete-db-instance --db-instance-identifier ${11} --skip-final-snapshot
+echo "Database Instance Deleted"
