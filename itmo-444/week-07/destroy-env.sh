@@ -14,19 +14,24 @@ LCN=$(aws autoscaling describe-launch-configurations --output=text --query='Laun
 IDS=$(aws ec2 describe-instances --filters Name=instance-state-name,Values=running --query "Reservations[*].Instances[*].InstanceId")
 DBIDS=$(aws rds describe-db-instances --output=text --query="DBInstances[*].DBInstanceIdentifier")
 
-aws autoscaling detach-instances --instance-ids $IDS --auto-scaling-group-name $ASG --no-should-decrement-desired-capacity
-echo "Detached Instances"
+aws autoscaling suspend-processes --auto-scaling-group-name $ASG
 
-aws ec2 terminate-instances --instance-ids $IDS
+#aws autoscaling detach-instances --instance-ids $IDS --auto-scaling-group-name $ASG --no-should-decrement-desired-capacity --no-cli-pager
+
+
+aws ec2 terminate-instances --instance-ids $IDS 
+aws ec2 wait instance-terminated --instance-ids $IDS
 echo "Terminated Instances"
 
-aws autoscaling delete-auto-scaling-group --auto-scaling-group-name $ASG --force-delete
-echo "Deleted Auto Saling Group"
+#aws autoscaling suspend-processes --auto-scaling-group-name $ASG
 
-aws elbv2 delete-listener --listener-arn $LS
+aws autoscaling delete-auto-scaling-group --auto-scaling-group-name $ASG 
+echo "Deleted Auto Scaling Group"
+
+aws elbv2 delete-listener --listener-arn $LS 
 echo "Deleted Listener"
 
-aws elbv2 delete-load-balancer --load-balancer-arn $LB
+aws elbv2 delete-load-balancer --load-balancer-arn $LB 
 echo "Deleted Load Balancer"
 
 aws elbv2 delete-target-group --target-group-arn $TG 
@@ -36,12 +41,12 @@ aws autoscaling delete-launch-configuration --launch-configuration-name $LCN
 echo "Deleted Launch Configuration"
 
 for DBID in $DBIDS; do
-	echo $DBID
-	aws rds delete-db-instance --db-instance-identifier $DBID --skip-final-snapshot
+	
+	aws rds delete-db-instance --db-instance-identifier $DBID --skip-final-snapshot --no-cli-pager
 done
 echo "Deleting DB Instances"
 
 for DBID in $DBIDS; do
-	aws rds wait db-instance-deleted --db-instance-identifier $DBID 
+	aws rds wait db-instance-deleted --db-instance-identifier $DBID --no-cli-pager
 done
 echo "DB Instances Deleted"

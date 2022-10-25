@@ -47,7 +47,7 @@ VPCID=$(aws ec2 describe-vpcs --output=text --query='Vpcs[*].VpcId')
 # Create Launch Configuration
 # https://awscli.amazonaws.com/v2/documentation/api/latest/reference/autoscaling/create-launch-configuration.html
 
-aws autoscaling create-launch-configuration --launch-configuration-name ${10} --image-id $1 --instance-type $2 --key-name $3 --security-groups $4 --user-data file://install-env.sh
+aws autoscaling create-launch-configuration --no-cli-pager --launch-configuration-name ${10} --image-id $1 --instance-type $2 --key-name $3 --security-groups $4 --user-data file://install-env.sh
 
 echo "Creating target group: $8"
 # Create AWS elbv2 target group (use default values for health-checks)
@@ -55,12 +55,12 @@ TGARN=$(aws elbv2 create-target-group --name $8 --protocol HTTP --port 80 --targ
 
 # create AWS elbv2 load-balancer
 echo "Creating load balancer"
-ELBARN=$(aws elbv2 create-load-balancer --security-groups $4 --name $7 --subnets $SUBNET2A $SUBNET2B --query='LoadBalancers[*].LoadBalancerArn')
+ELBARN=$(aws elbv2 create-load-balancer --security-groups $4 --name $7 --subnets $SUBNET2A $SUBNET2B --query='LoadBalancers[*].LoadBalancerArn') 
 
 # AWS elbv2 wait for load-balancer available
 # https://awscli.amazonaws.com/v2/documentation/api/latest/reference/elbv2/wait/load-balancer-available.html
 echo "Waiting for load balancer to be available"
-aws elbv2 wait load-balancer-available --load-balancer-arns $ELBARN
+aws elbv2 wait load-balancer-available --load-balancer-arns $ELBARN --no-cli-pager
 echo "Load balancer available"
 
 # create AWS elbv2 listener for HTTP on port 80
@@ -81,13 +81,13 @@ aws autoscaling create-auto-scaling-group --auto-scaling-group-name ${9} --launc
 URL=$(aws elbv2 describe-load-balancers --output=json --load-balancer-arns $ELBARN --query='LoadBalancers[*].DNSName' --no-cli-pager)
 echo $URL
 
-aws rds create-db-instance --db-instance-identifier ${11} --db-instance-class db.t3.micro --engine mariadb --master-username wizard --master-user-password cluster168 --db-name customers --allocated-storage 20
+aws rds create-db-instance --db-instance-identifier ${11} --db-instance-class db.t3.micro --engine mariadb --master-username wizard --master-user-password cluster168 --db-name customers --allocated-storage 20 --no-cli-pager
 echo "Creating DB Instance"
 
-aws rds wait db-instance-available --db-instance-identifier ${11}
+aws rds wait db-instance-available --db-instance-identifier ${11} --no-cli-pager 
 echo "DB Instance Availble"
 
-aws rds create-db-instance-read-replica --db-instance-identifier ${12} --source-db-instance-identifier ${11}
+aws rds create-db-instance-read-replica --db-instance-identifier ${12} --source-db-instance-identifier ${11} --no-cli-pager
 
-aws rds wait db-instance-available --db-instance-identifier ${12}
+aws rds wait db-instance-available --db-instance-identifier ${12} --no-cli-pager
 echo "Read-replica Availble"
