@@ -11,24 +11,37 @@ LB=$(aws elbv2 describe-load-balancers --output=text --query='LoadBalancers[*].L
 TG=$(aws elbv2 describe-target-groups --output=text --query='TargetGroups[*].TargetGroupArn')
 LS=$(aws elbv2 describe-listeners --load-balancer-arn $LB --output=text --query='Listeners[*].ListenerArn')
 LCN=$(aws autoscaling describe-launch-configurations --output=text --query='LaunchConfigurations[*].LaunchConfigurationName')
+IDS=$(aws ec2 describe-instances --filters Name=instance-state-name,Values=running --query "Reservations[*].Instances[*].InstanceId")
+DBIDS=$(aws rds describe-db-instances --output=text --query="DBInstances[*].DBInstanceIdentifier")
 
-echo "Delete Auto Saling Group"
+aws autoscaling detach-instances --instance-ids $IDS --auto-scaling-group-name $ASG --no-should-decrement-desired-capacity
+echo "Detached Instances"
+
+aws ec2 terminate-instances --instance-ids $IDS
+echo "Terminated Instances"
+
 aws autoscaling delete-auto-scaling-group --auto-scaling-group-name $ASG --force-delete
+echo "Deleted Auto Saling Group"
 
-echo "Delete Listener"
 aws elbv2 delete-listener --listener-arn $LS
+echo "Deleted Listener"
 
-echo "Delete Load Balancer"
 aws elbv2 delete-load-balancer --load-balancer-arn $LB
+echo "Deleted Load Balancer"
 
-echo "Delete Target Group"
 aws elbv2 delete-target-group --target-group-arn $TG 
+echo "Deleted Target Group"
 
-echo "Delete Launch Configuration"
 aws autoscaling delete-launch-configuration --launch-configuration-name $LCN
+echo "Deleted Launch Configuration"
 
-aws rds wait delete-db-instance --db-instance-identifier ${12} --skip-final-snapshot
-echo "Read-replica Deleted"
+for DBID in $DBIDS; do
+	echo $DBID
+	aws rds delete-db-instance --db-instance-identifier $DBID --skip-final-snapshot
+done
+echo "Deleting DB Instances"
 
-aws rds wait delete-db-instance --db-instance-identifier ${11} --skip-final-snapshot
-echo "Database Instance Deleted"
+for DBID in $DBIDS; do
+	aws rds wait db-instance-deleted --db-instance-identifier $DBID 
+done
+echo "DB Instances Deleted"
