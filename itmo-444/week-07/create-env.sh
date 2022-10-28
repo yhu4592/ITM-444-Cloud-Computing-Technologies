@@ -81,13 +81,13 @@ aws autoscaling create-auto-scaling-group --auto-scaling-group-name ${9} --launc
 URL=$(aws elbv2 describe-load-balancers --output=json --load-balancer-arns $ELBARN --query='LoadBalancers[*].DNSName' --no-cli-pager)
 echo $URL
 
-#aws rds create-db-instance --db-instance-identifier ${11} --db-instance-class db.t3.micro --engine mariadb --master-username wizard --master-user-password cluster168 --db-name customers --allocated-storage 20 --no-cli-pager
+aws rds create-db-instance --db-instance-identifier ${11} --db-instance-class db.t3.micro --engine mariadb --master-username wizard --master-user-password cluster168 --db-name customers --allocated-storage 20 --no-cli-pager
 echo "Creating DB Instance"
 
-#aws rds wait db-instance-available --db-instance-identifier ${11} --no-cli-pager 
+aws rds wait db-instance-available --db-instance-identifier ${11} --no-cli-pager 
 echo "DB Instance Availble"
 
-#aws rds create-db-instance-read-replica --db-instance-identifier ${12} --source-db-instance-identifier ${11} --no-cli-pager
+aws rds create-db-instance-read-replica --db-instance-identifier ${12} --source-db-instance-identifier ${11} --no-cli-pager
 
-#aws rds wait db-instance-available --db-instance-identifier ${12} --no-cli-pager
+aws rds wait db-instance-available --db-instance-identifier ${12} --no-cli-pager
 echo "Read-replica Availble"
