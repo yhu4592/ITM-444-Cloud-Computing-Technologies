@@ -19,13 +19,14 @@ sudo npm install pm2 -g
 ####################################################################
 # Note - change "hajek.git" to be your private repo name (hawk ID) #
 ####################################################################
-sudo -u ubuntu git clone git@github.com:illinoistech-itm/jhajek.git
+sudo -u ubuntu git clone git@github.com:illinoistech-itm/yhu78.git
 
 # Start the nodejs app where it is located via PM2
 # https://pm2.keymetrics.io/docs/usage/quick-start
-cd /home/ubuntu/jhajek/itmo-444-544/mp1/
+cd /home/ubuntu/yhu78/itmo-444/mp1/
 
 sudo pm2 start app.js
 
 # Delete the RSA private key once setup is finished
 rm /home/ubuntu/.ssh/id_ed25519
+
