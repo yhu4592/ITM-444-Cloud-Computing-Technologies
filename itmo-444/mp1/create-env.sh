@@ -124,9 +124,15 @@ USERVALUE=$(aws secretsmanager get-secret-value --secret-id ${20} --output=json 
 PASSVALUE=$(aws secretsmanager get-secret-value --secret-id ${20} --output=json | jq '.SecretString' | tr -s } ' ' | tr -s ['"'] ' ' | awk {'print $12'} | tr -d '\\')
 
 echo "creating database"
-aws rds create-db-instance --db-instance-identifier ${11} --db-instance-class db.t3.micro --engine ${16} --master-username $USERVALUE --master-user-password $PASSVALUE --allocated-storage 20 --backup-retention-period 0 --db-name ${17}
+aws rds create-db-instance --db-instance-identifier ${11} --db-instance-class db.t3.micro --engine ${16} --master-username $USERVALUE --master-user-password $PASSVALUE --allocated-storage 20 --backup-retention-period 1 --db-name ${17}
 
 aws rds wait db-instance-available --db-instance-identifier ${11}
+
+echo "creating read-only replica"
+aws rds create-db-instance-read-replica --db-instance-identifier ${12} --source-db-instance-identifier ${11} --no-cli-pager
+
+aws rds wait db-instance-available --db-instance-identifier ${12} --no-cli-pager
+echo "read-replica ready"
 
 echo "creating s3 buckets"
 aws s3api create-bucket --bucket ${18} --region us-east-1
@@ -135,4 +141,5 @@ aws s3api create-bucket --bucket ${19} --region us-east-1
 aws s3api wait bucket-exists --bucket ${18}
 aws s3api wait bucket-exists --bucket ${19}
 echo "s3 buckets made"
+
 
