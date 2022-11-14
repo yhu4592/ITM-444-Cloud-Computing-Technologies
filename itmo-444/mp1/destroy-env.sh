@@ -72,12 +72,11 @@ aws autoscaling delete-launch-configuration --launch-configuration-name $LCN
 echo "Deleted Launch Configuration"
 
 for DBID in $DBIDS; do
+	aws rds delete-db-instance --db-instance-identifier $DBID --skip-final-snapshot --no-cli-pager
+done
+echo "Deleting DB Instances"
 
-		        aws rds delete-db-instance --db-instance-identifier $DBID --skip-final-snapshot --no-cli-pager
-				done
-					echo "Deleting DB Instances"
-
-						for DBID in $DBIDS; do
-									        aws rds wait db-instance-deleted --db-instance-identifier $DBID --no-cli-pager
-												done
-														echo "DB Instances Deleted"
+for DBID in $DBIDS; do
+	aws rds wait db-instance-deleted --db-instance-identifier $DBID --no-cli-pager
+done
+echo "DB Instances Deleted"
