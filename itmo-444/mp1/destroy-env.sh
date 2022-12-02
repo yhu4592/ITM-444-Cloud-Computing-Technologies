@@ -3,21 +3,17 @@
 
 # Sample code to retrieve objects (file) names
 # https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3api/list-objects-v2.html
-aws s3api list-objects-v2 --bucket ${18} --query 'Contents[*].Key'
-FILENAMESRAW=$(aws s3api list-objects-v2 --bucket ${18} --query 'Contents[*].Key')
-FILENAMESFIN=$(aws s3api list-objects-v2 --bucket ${19} --query 'Contents[*].Key')
+BUCKETS=$(aws s3api list-buckets --output=text --query "Buckets[].Name")
 
-echo ${18}
-echo "Deleting Bucket Raw Items"
-for FILE in $FILENAMESRAW; do
-    aws s3api delete-object --bucket ${18} --key $FILE
-done
 
-echo ${19}
-echo "Deleting Bucket Fin Items"
-for FILE in $FILENAMESFIN; do
-    aws s3api delete-object --bucket ${19} --key $FILE
-done
+echo "Deleting objects in Bucekts"
+for BUCK in $BUCKETS; do
+    FILES=$(aws s3api list-objects-v2 --bucket $BUCK --query 'Contents[*].Key')
+    for FILE in $FILES; do
+	aws s3api delete-object --bucket $BUCK --key $FILE
+    done
+done	
+
 # https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3api/delete-object.html
 
 
