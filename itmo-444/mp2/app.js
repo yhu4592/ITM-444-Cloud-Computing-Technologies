@@ -382,11 +382,11 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
-//app.get('/gallery', function (req, res) {
-//
-//(async () => {await getImagesFromS3Bucket(req,res) } ) ();
-//
-//});
+app.get('/gallery', function (req, res) {
+
+(async () => {await getImagesFromS3Bucket(req,res) } ) ();
+
+});
 
 //app.get('/db', function (req,res) {
 //(async () => { await getDBIdentifier() } ) ();
