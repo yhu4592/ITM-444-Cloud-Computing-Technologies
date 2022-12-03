@@ -142,4 +142,5 @@ aws s3api wait bucket-exists --bucket ${18}
 aws s3api wait bucket-exists --bucket ${19}
 echo "s3 buckets made"
 
-
+echo "creating secret"
+aws sns create-topic --name ${22}
