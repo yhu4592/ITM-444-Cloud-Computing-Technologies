@@ -85,7 +85,7 @@ VPCID=$(aws ec2 describe-vpcs --output=text --query='Vpcs[*].VpcId')
 # Create Launch Configuration
 # https://awscli.amazonaws.com/v2/documentation/api/latest/reference/autoscaling/create-launch-configuration.html
 
-aws autoscaling create-launch-configuration --launch-configuration-name ${10} --image-id $1 --instance-type $2 --key-name $3 --security-groups $4 --user-data file://install-env.sh
+aws autoscaling create-launch-configuration --launch-configuration-name ${10} --image-id $1 --instance-type $2 --key-name $3 --security-groups $4 --iam-instance-profile ${21} --user-data file://install-env.sh
 
 echo "Creating target group: $8"
 # Create AWS elbv2 target group (use default values for health-checks)
@@ -116,3 +116,30 @@ aws autoscaling create-auto-scaling-group --auto-scaling-group-name ${9} --launc
 #https://awscli.amazonaws.com/v2/documentation/api/latest/reference/elbv2/describe-load-balancers.html
 URL=$(aws elbv2 describe-load-balancers --output=json --load-balancer-arns $ELBARN --query='LoadBalancers[*].DNSName')
 echo $URL
+
+echo "creating secret"
+aws secretsmanager create-secret --name ${20} --secret-string file://maria.json
+
+USERVALUE=$(aws secretsmanager get-secret-value --secret-id ${20} --output=json | jq '.SecretString' | tr -s , ' ' | tr -s ['"'] ' ' | awk {'print $6'} |  tr -d '\\')
+PASSVALUE=$(aws secretsmanager get-secret-value --secret-id ${20} --output=json | jq '.SecretString' | tr -s } ' ' | tr -s ['"'] ' ' | awk {'print $12'} | tr -d '\\')
+
+echo "creating database"
+aws rds create-db-instance --db-instance-identifier ${11} --db-instance-class db.t3.micro --engine ${16} --master-username $USERVALUE --master-user-password $PASSVALUE --allocated-storage 20 --backup-retention-period 1 --db-name ${17}
+
+aws rds wait db-instance-available --db-instance-identifier ${11}
+
+echo "creating read-only replica"
+aws rds create-db-instance-read-replica --db-instance-identifier ${12} --source-db-instance-identifier ${11} --no-cli-pager
+
+aws rds wait db-instance-available --db-instance-identifier ${12} --no-cli-pager
+echo "read-replica ready"
+
+echo "creating s3 buckets"
+aws s3api create-bucket --bucket ${18} --region us-east-1
+aws s3api create-bucket --bucket ${19} --region us-east-1
+
+aws s3api wait bucket-exists --bucket ${18}
+aws s3api wait bucket-exists --bucket ${19}
+echo "s3 buckets made"
+
+
