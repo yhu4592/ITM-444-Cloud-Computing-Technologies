@@ -122,7 +122,7 @@ const subscribeEmailToSNSTopic = async () => {
 
 	const params = {
 
-		Endpoint: "hajek@iit.edu",
+		Endpoint: "yhu78@hawk.iit.edu",
 		Protocol: 'email',
 		TopicArn: topicArn.Attributes.TopicArn
 	}
