@@ -59,7 +59,7 @@ echo "Deleted Load Balancer"
 
 aws elbv2 wait load-balancers-deleted --load-balancer-arns $LB
 
-sleep 120
+sleep 180
 
 aws autoscaling delete-auto-scaling-group --auto-scaling-group-name $ASG
 echo "Deleted Auto Scaling Group"
