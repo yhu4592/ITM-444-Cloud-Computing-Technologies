@@ -119,7 +119,6 @@ const getSnsTopicArn = async () => {
 const subscribeEmailToSNSTopic = async () => {
 
         let topicArn = await getListOfSnsTopics();
-
 	const params = {
 
 		Endpoint: "yhu78@hawk.iit.edu",
@@ -211,7 +210,7 @@ const listObjects = async () => {
 	try {
 		const results = await client.send(command);
 		console.log("List Objects Results: ", results);
-	        const url = "https://" + results.Name + ".s3.amazonaws.com/" + results.Contents[0].Key;	
+	        const url = "https://" + results.Name + ".s3.amazonaws.com/" + results.Contents[1].Key;	
 		console.log("URL: " , url);
 		return url;
 	} catch (err) {
