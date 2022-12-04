@@ -10,7 +10,7 @@
 const { SNSClient, ListTopicsCommand, GetTopicAttributesCommand, SubscribeCommand, PublishCommand } = require("@aws-sdk/client-sns");
 const { S3Client, ListBucketsCommand, ListObjectsCommand, GetObjectCommand } = require('@aws-sdk/client-s3');
 
-//const { RDSClient, DescribeDBInstancesCommand } = require("@aws-sdk/client-rds");
+const { RDSClient, DescribeDBInstancesCommand } = require("@aws-sdk/client-rds");
 
 const express = require('express')
 const app = express();
