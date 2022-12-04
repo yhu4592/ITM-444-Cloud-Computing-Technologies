@@ -23,15 +23,7 @@ const s3 = new S3Client({ region: REGION });
 ///////////////////////////////////////////////////////////////////////////
 // I hardcoded my S3 bucket name, this you need to determine dynamically
 // Using the AWS JavaScript SDK
-///////////////////////////////////////////////////////////////////////////
-var bucketName = "";
-s3.listBuckets(function(err, data) {
-    if (err) {
-        console.log(err, err.stack)
-    } else {
-        console.log("Trying to query buckets: " + data)
-    }         
-});   
+/////////////////////////////////////////////////////////////////////////// 
 
 var upload = multer({
     storage: multerS3({
