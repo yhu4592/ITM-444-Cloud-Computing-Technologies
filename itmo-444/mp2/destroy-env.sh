@@ -59,7 +59,7 @@ echo "Deleted Load Balancer"
 
 aws elbv2 wait load-balancers-deleted --load-balancer-arns $LB
 
-sleep 120
+sleep 180
 
 aws autoscaling delete-auto-scaling-group --auto-scaling-group-name $ASG
 echo "Deleted Auto Scaling Group"
@@ -76,3 +76,6 @@ for DBID in $DBIDS; do
 	aws rds wait db-instance-deleted --db-instance-identifier $DBID --no-cli-pager
 done
 echo "DB Instances Deleted"
+
+TOPICARN=$(aws sns list-topics --output=text --query='Topics[*].TopicArn')
+aws sns delete-topic --topic-arn $TOPICARN
