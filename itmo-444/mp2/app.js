@@ -24,9 +24,17 @@ const s3 = new S3Client({ region: REGION });
 // I hardcoded my S3 bucket name, this you need to determine dynamically
 // Using the AWS JavaScript SDK
 ///////////////////////////////////////////////////////////////////////////
+var bucketName = "";
+s3.listBuckets(function(err, data) {
+    if (err) {
+        console.log(err, err.stack)
+    } else {
+        console.log(data)
+    }         
+});   
 
-	var upload = multer({
-        storage: multerS3({
+var upload = multer({
+    storage: multerS3({
         s3: s3,
         acl: 'public-read',
         bucket: 'ykh-raw',
@@ -34,7 +42,7 @@ const s3 = new S3Client({ region: REGION });
             cb(null, file.originalname);
             }
     })
-	});
+});
 
 //////////////////////////////////////////////////////
 // Use this to get the Secret ARN
