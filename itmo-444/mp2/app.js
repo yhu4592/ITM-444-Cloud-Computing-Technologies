@@ -173,7 +173,7 @@ const listAndCacheBuckets = async () => {
 		const results = await client.send(command);
 		//console.log("List Buckets Results: ", results.Buckets[0].Name);
 		const params = {
-			Bucket: results.Buckets[0].Name
+			Bucket: results.Buckets[1].Name
 		}
 		return params;
 } catch (err) {
@@ -210,7 +210,7 @@ const listObjects = async () => {
 	try {
 		const results = await client.send(command);
 		console.log("List Objects Results: ", results);
-	        const url = "https://" + results.Name + ".s3.amazonaws.com/" + results.Contents[1].Key;	
+	        const url = "https://" + results.Name + ".s3.amazonaws.com/" + results.Contents[0].Key;	
 		console.log("URL: " , url);
 		return url;
 	} catch (err) {
