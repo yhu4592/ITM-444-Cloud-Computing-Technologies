@@ -191,7 +191,7 @@ const listBuckets = async () => {
 		const results = await client.send(command);
 		//console.log("List Buckets Results: ", results.Buckets[0].Name);
 		const params = {
-			Bucket: results.Buckets[0].Name
+			Bucket: results.Buckets[1].Name
 		}
 		return params;
 	
