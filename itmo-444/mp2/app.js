@@ -17,7 +17,7 @@ const app = express();
 const multer = require('multer')
 const multerS3 = require('multer-s3')
 //const mysql = require('mysql2');
-//const mysql = require('mysql2/promise');
+const mysql = require('mysql2/promise');
 const REGION = "us-east-1"; //e.g. "us-east-1"
 const s3 = new S3Client({ region: REGION });
 ///////////////////////////////////////////////////////////////////////////
@@ -28,7 +28,7 @@ const s3 = new S3Client({ region: REGION });
 	var upload = multer({
         storage: multerS3({
         s3: s3,
-        bucket: 'ykh-raw',
+        bucket: 'raw-jrh-itmo3',
         key: function (req, file, cb) {
             cb(null, file.originalname);
             }
@@ -122,7 +122,7 @@ const subscribeEmailToSNSTopic = async () => {
 
 	const params = {
 
-		Endpoint: "yhu78@hawk.iit.edu",
+		Endpoint: "hajek@iit.edu",
 		Protocol: 'email',
 		TopicArn: topicArn.Attributes.TopicArn
 	}
@@ -265,86 +265,114 @@ const getImagesFromS3Bucket = async (req,res) => {
 ////////////////////////////////////////////////
 // Lookup Database Identifier
 //
-//onst getDBIdentifier = async () => {
+const getDBIdentifier = async () => {
 
-        //const client = new RDSClient({region: "us-east-2" });
-        //const command = new DescribeDBInstancesCommand({});
-        //try {
-        //        const results = await client.send(command);
-        //        //console.log("List RDS results: ", results.DBInstances[0].DBInstanceIdentifier);
+        const client = new RDSClient({region: "us-east-2" });
+        const command = new DescribeDBInstancesCommand({});
+        try {
+                const results = await client.send(command);
+                //console.log("List RDS results: ", results.DBInstances[0].DBInstanceIdentifier);
                 //console.log("List RDS Endpoint results: ", results.DBInstances[0].Endpoint.Address);
-        //        return results;
-        //} catch (err) {
-         //       console.error(err);
-       // }
+                return results;
+        } catch (err) {
+                console.error(err);
+        }
 
-//};
+};
 
 ////////////////////////////////////////////////
 // Select Record
 //
-//const selectRecord = async () => {
+const selectRecord = async () => {
 
-        //let dbIdentifier = await getDBIdentifier();
-        //let sec = await getSecrets();
-        //let obj = JSON.parse(sec.SecretString);
-        //try {
+        let dbIdentifier = await getDBIdentifier();
+        let sec = await getSecrets();
+        let obj = JSON.parse(sec.SecretString);
+        try {
 
 
-  //const mysql = require('mysql2/promise');
+  const mysql = require('mysql2/promise');
         // create the connection to database
-    //    const connection = await mysql.createConnection({
-      //  host: dbIdentifier.DBInstances[0].Endpoint.Address,
-        //user: obj.username,
-        //password: obj.password,
-        //database: 'company'
-        //});
+        const connection = await mysql.createConnection({
+        host: dbIdentifier.DBInstances[0].Endpoint.Address,
+        user: obj.username,
+        password: obj.password,
+        database: 'company'
+        });
 
         // simple query
-        //const [rows,fields] = await connection.execute('SELECT * FROM `entries`');
-	//	return rows;
-        //} catch (err) {
-        //        console.error(err);
-        //}
-//};
+        const [rows,fields] = await connection.execute('SELECT * FROM `entries`');
+		return rows;
+        } catch (err) {
+                console.error(err);
+        }
+};
 
 ////////////////////////////////////////////////
 // Select and Print Record
 //
-//const selectAndPrintRecord = async (req,res) => {
+const selectAndPrintRecord = async (req,res) => {
 
-        //let dbIdentifier = await getDBIdentifier();
-        //let sec = await getSecrets();
-        //let obj = JSON.parse(sec.SecretString);
-        //try {
+        let dbIdentifier = await getDBIdentifier();
+        let sec = await getSecrets();
+        let obj = JSON.parse(sec.SecretString);
+        try {
 
 
-        //const mysql = require('mysql2/promise');
+        const mysql = require('mysql2/promise');
         // create the connection to database
-        //const connection = await mysql.createConnection({
-        //host: dbIdentifier.DBInstances[0].Endpoint.Address,
-        //user: obj.username,
-        //password: obj.password,
-        //database: 'company'
-        //});
+        const connection = await mysql.createConnection({
+        host: dbIdentifier.DBInstances[0].Endpoint.Address,
+        user: obj.username,
+        password: obj.password,
+        database: 'company'
+        });
 
         // simple query
-       //const [rows,fields] = await connection.execute('SELECT * FROM `entries`');
-        //res.set('Content-Type', 'text/html');
-        //res.write("Here are the records: " + "\n");
-        //res.write(JSON.stringify(rows));
-        //res.end();
+        const [rows,fields] = await connection.execute('SELECT * FROM `entries`');
+        res.set('Content-Type', 'text/html');
+        res.write("Here are the records: " + "\n");
+        res.write(JSON.stringify(rows));
+        res.end();
 
-	//	return rows;
-        //} catch (err) {
-        //        console.error(err);
-        //}
+		return rows;
+        } catch (err) {
+                console.error(err);
+        }
 
-//};
+};
 
 ////////////////////////////////////////////////
 // Select and Print Record
 //
+const insertRecord = async (req,res) => {
+
+        let dbIdentifier = await getDBIdentifier();
+        let sec = await getSecrets();
+        let obj = JSON.parse(sec.SecretString);
+        try {
+
+
+        const mysql = require('mysql2/promise');
+        // create the connection to database
+        const connection = await mysql.createConnection({
+        host: dbIdentifier.DBInstances[0].Endpoint.Address,
+        user: obj.username,
+        password: obj.password,
+        database: 'company'
+        });
+
+        // simple query
+	let email = req.body['email'];
+	let statement = 'INSERT INTO entries(RecordNumber,CustomerName,Email,Phone,Stat,RAWS3URL) VALUES("00000","NAME","' + email + '","000-000-0000",0,"http://");'
+        const [rows,fields] = await connection.execute(statement);
+       console.log(rows) 
+		return rows;
+        } catch (err) {
+                console.error(err);
+        }
+
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // Request to index.html or / express will match this route and render this page
@@ -354,11 +382,11 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/gallery', function (req, res) {
-
-(async () => {await getImagesFromS3Bucket(req,res) } ) ();
-
-});
+//app.get('/gallery', function (req, res) {
+//
+//(async () => {await getImagesFromS3Bucket(req,res) } ) ();
+//
+//});
 
 //app.get('/db', function (req,res) {
 //(async () => { await getDBIdentifier() } ) ();
@@ -393,4 +421,3 @@ app.listen(80, function () {
     console.log('Amazon s3 file upload app listening on port 80');
    // (async () => console.log(await getSecretARN()))();
 });
-
