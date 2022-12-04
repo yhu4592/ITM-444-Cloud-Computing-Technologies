@@ -28,6 +28,7 @@ const s3 = new S3Client({ region: REGION });
 	var upload = multer({
         storage: multerS3({
         s3: s3,
+        acl: 'public-read',
         bucket: 'ykh-raw',
         key: function (req, file, cb) {
             cb(null, file.originalname);
