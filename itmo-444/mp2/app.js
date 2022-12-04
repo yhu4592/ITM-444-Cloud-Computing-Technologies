@@ -283,12 +283,12 @@ const getDBIdentifier = async () => {
 ////////////////////////////////////////////////
 // Select Record
 //
-const selectRecord = async () => {
+//const selectRecord = async () => {
 
-        let dbIdentifier = await getDBIdentifier();
-        let sec = await getSecrets();
-        let obj = JSON.parse(sec.SecretString);
-        try {
+        //let dbIdentifier = await getDBIdentifier();
+        //let sec = await getSecrets();
+        //let obj = JSON.parse(sec.SecretString);
+        //try {
 
 
   //const mysql = require('mysql2/promise');
