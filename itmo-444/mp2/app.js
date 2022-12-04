@@ -28,7 +28,7 @@ const s3 = new S3Client({ region: REGION });
 	var upload = multer({
         storage: multerS3({
         s3: s3,
-        bucket: 'raw-jrh-itmo3',
+        bucket: 'ykh-raw',
         key: function (req, file, cb) {
             cb(null, file.originalname);
             }
@@ -122,7 +122,7 @@ const subscribeEmailToSNSTopic = async () => {
 
 	const params = {
 
-		Endpoint: "hajek@iit.edu",
+		Endpoint: "yhu78@hawk.iit.edu",
 		Protocol: 'email',
 		TopicArn: topicArn.Attributes.TopicArn
 	}
