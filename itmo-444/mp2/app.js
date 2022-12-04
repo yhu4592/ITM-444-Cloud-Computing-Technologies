@@ -29,7 +29,7 @@ s3.listBuckets(function(err, data) {
     if (err) {
         console.log(err, err.stack)
     } else {
-        console.log(data)
+        console.log("Trying to query buckets: " + data)
     }         
 });   
 
@@ -40,7 +40,7 @@ var upload = multer({
         bucket: 'ykh-raw',
         key: function (req, file, cb) {
             cb(null, file.originalname);
-            }
+        }
     })
 });
 
