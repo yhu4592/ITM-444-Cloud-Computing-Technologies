@@ -124,7 +124,7 @@ const subscribeEmailToSNSTopic = async () => {
 
 		Endpoint: "yhu78@hawk.iit.edu",
 		Protocol: 'email',
-		TopicArn: topicArn.Attributes.TopicArn
+		TopicArn: topicArn.Topics[0].TopicArn
 	}
 
         const client = new SNSClient({region: "us-east-2" });
