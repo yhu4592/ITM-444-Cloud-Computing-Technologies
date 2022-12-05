@@ -190,7 +190,7 @@ const listBuckets = async () => {
         const command = new ListBucketsCommand({});
 	try {
 		const results = await client.send(command);
-		//console.log("List Buckets Results: ", results.Buckets[0].Name);
+		console.log("List Buckets Results: ", results.Buckets[0].Name);
 		const params = {
 			Bucket: results.Buckets[1].Name
 		}
@@ -379,7 +379,7 @@ const getDBIdentifier = async () => {
 //
 
 app.get('/', function (req, res) {
-    console.log(await listBuckets());
+    await listBuckets();
     res.sendFile(__dirname + '/index.html');
 });
 
