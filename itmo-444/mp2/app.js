@@ -29,7 +29,7 @@ var upload = multer({
     storage: multerS3({
         s3: s3,
         acl: 'public-read',
-        bucket: await listBuckets(),
+        bucket: "ykh-raw",
         key: function (req, file, cb) {
             cb(null, file.originalname);
         }
@@ -379,6 +379,7 @@ const getDBIdentifier = async () => {
 //
 
 app.get('/', function (req, res) {
+    console.log(await listBuckets());
     res.sendFile(__dirname + '/index.html');
 });
 
