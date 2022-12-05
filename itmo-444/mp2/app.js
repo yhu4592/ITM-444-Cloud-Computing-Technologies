@@ -379,7 +379,7 @@ const getDBIdentifier = async () => {
 //
 
 app.get('/', function (req, res) {
-    await listBuckets();
+    listBuckets();
     res.sendFile(__dirname + '/index.html');
 });
 
