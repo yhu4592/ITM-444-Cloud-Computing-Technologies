@@ -128,7 +128,7 @@ const subscribeEmailToSNSTopic = async () => {
 	}
 
         const client = new SNSClient({region: "us-east-2" });
-        const command = new SubscribeCommand( {params} );
+        const command = new SubscribeCommand( params );
         try {
                 const results = await client.send(command);
                 console.log("Subscribe Results: ", results);
