@@ -25,6 +25,26 @@ const s3 = new S3Client({ region: REGION });
 // Using the AWS JavaScript SDK
 /////////////////////////////////////////////////////////////////////////// 
 
+//////////////////////////////////////////////////////////
+// Add S3 ListBucket code here
+//
+const listBuckets = async () => {
+
+	const client = new S3Client({region: "us-east-1" });
+        const command = new ListBucketsCommand({});
+	try {
+		const results = await client.send(command);
+		console.log("List Buckets Results: ", results.Buckets[0].Name);
+		const params = {
+			Bucket: results.Buckets[1].Name
+		}
+		return params;
+	
+} catch (err) {
+	console.error(err);
+}
+};
+
 var upload = multer({
     storage: multerS3({
         s3: s3,
@@ -181,25 +201,7 @@ const listAndCacheBuckets = async () => {
 	console.error(err);
 }
 };
-//////////////////////////////////////////////////////////
-// Add S3 ListBucket code here
-//
-const listBuckets = async () => {
 
-	const client = new S3Client({region: "us-east-1" });
-        const command = new ListBucketsCommand({});
-	try {
-		const results = await client.send(command);
-		console.log("List Buckets Results: ", results.Buckets[0].Name);
-		const params = {
-			Bucket: results.Buckets[1].Name
-		}
-		return params;
-	
-} catch (err) {
-	console.error(err);
-}
-};
 
 ///////////////////////////////////////
 // ListObjects S3 
