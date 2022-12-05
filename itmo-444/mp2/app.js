@@ -29,7 +29,7 @@ var upload = multer({
     storage: multerS3({
         s3: s3,
         acl: 'public-read',
-        bucket: 'ykh-raw',
+        bucket: await listBuckets(),
         key: function (req, file, cb) {
             cb(null, file.originalname);
         }
